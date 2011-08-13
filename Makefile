@@ -17,7 +17,7 @@
 DEVICE     = attiny2313
 CLOCK      = 1000000
 PROGRAMMER = -c tinyusb
-OBJECTS    = main.o
+OBJECTS    = servo.o
 # ATMega8 fuse bits (fuse bits for other devices are different!):
 # Example for 8 MHz internal oscillator
 # Fuse high byte:
@@ -62,7 +62,7 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 # symbolic targets:
-all:	main.hex
+all:	servo.hex
 
 .c.o:
 	$(COMPILE) -c $< -o $@
@@ -78,29 +78,29 @@ all:	main.hex
 	$(COMPILE) -S $< -o $@
 
 flash:	all
-	$(AVRDUDE) -U flash:w:main.hex:i
+	$(AVRDUDE) -U flash:w:servo.hex:i
 
 
 # if you use a bootloader, change the command below appropriately:
 load: all
-	bootloadHID main.hex
+	bootloadHID servo.hex
 
 clean:
-	rm -f main.hex main.elf $(OBJECTS)
+	rm -f servo.hex servo.elf $(OBJECTS)
 
 # file targets:
-main.elf: $(OBJECTS)
-	$(COMPILE) -o main.elf $(OBJECTS)
+servo.elf: $(OBJECTS)
+	$(COMPILE) -o servo.elf $(OBJECTS)
 
-main.hex: main.elf
-	rm -f main.hex
-	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
+servo.hex: servo.elf
+	rm -f servo.hex
+	avr-objcopy -j .text -j .data -O ihex servo.elf servo.hex
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
 # Targets for code debugging and analysis:
-disasm:	main.elf
-	avr-objdump -d main.elf
+disasm:	servo.elf
+	avr-objdump -d servo.elf
 
 cpp:
-	$(COMPILE) -E main.c
+	$(COMPILE) -E servo.c

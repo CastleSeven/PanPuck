@@ -19,8 +19,10 @@ void initClock(void)
 void initPWM(void)
 {
     DDRB |= (1 << DDB2); //Set PB2 as output of PWM (OC0A)
-    TCCR0A |= (1 << WGM00);
-    TCCR0B |= (1 << WGM02) | (1 << CS02); // The WGM bits setup the correct PWM mode, the CS02 sets timer prescaling to 256
+    TCCR0A |= (1 << WGM00) | (1 << COM0A1); // This sets PWM Phase Correct mode 1, compare behavior
+    TCCR0B |= (1 << CS02); //CS02 sets timer prescaling to 256
+    OCR0A = 24; //This sets the compare match value to 9.16% dc, 1.5ms pulse, centering the servo
+
 
 }
 int main(void)
@@ -29,7 +31,7 @@ int main(void)
     //initClock();
     initPWM();
     for (;;)
-        sleep_mode();
+        ;
     return (0);
 }
 
